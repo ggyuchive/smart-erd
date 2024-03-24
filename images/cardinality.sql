@@ -1,0 +1,2 @@
+USER(1) <-> LOG(0..N)
+USER(1) <-> LOGINFO(1)
