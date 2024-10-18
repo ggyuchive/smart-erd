@@ -17,10 +17,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="id">ID:</label>
         <input
           type="text"
-          id="username"
+          id="id"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
