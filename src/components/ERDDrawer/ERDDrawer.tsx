@@ -3,7 +3,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
 import { ViewUpdate } from '@codemirror/view';  // ViewUpdate 타입 가져오기
 
-const SqlEditor: React.FC = () => {
+const ERDDrawer: React.FC = () => {
   const [code, setCode] = useState<string>('');  // 상태 타입을 명시적으로 설정
 
   const handleCodeChange = (value: string, viewUpdate: ViewUpdate) => {
@@ -17,10 +17,10 @@ const SqlEditor: React.FC = () => {
         height="300px"
         extensions={[sql()]}
         onChange={(value: string, viewUpdate: ViewUpdate) => handleCodeChange(value, viewUpdate)}  // value와 viewUpdate의 타입을 명시
-        theme='light'
+        theme='dark'
       />
     </div>
   );
 };
 
-export default SqlEditor;
+export default ERDDrawer;

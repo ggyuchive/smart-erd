@@ -1,20 +1,32 @@
 import React from 'react';
-import { DatePicker } from 'antd';
+import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Login from './components/Login/Login';
-import Main from './components/Main/Main'
+import Register from './components/Register/Register';
+import MainLayout from './components/MainLayout/MainLayout';
+import ERDDrawer from './components/ERDDrawer/ERDDrawer';
+import UserList from './components/UserList/UserList';
+import './App.css'
 
 const App: React.FC = () => {
   const handleLogin = (username: string, password: string) => {
-    console.log('Logging in with', { username, password });
+    console.log('Log in with', { username, password });
+  };
+  const handleRegister = (username: string, password: string) => {
+    console.log('Register with', { username, password });
   };
 
   return (
-    <div>
-      <h1>Welcome to SMART ERD!</h1>
-      <Login onLogin={handleLogin} />
-      <Main/>
-      <DatePicker/>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login onLogin={handleLogin}/>} />
+        <Route path="/register" element={<Register onRegister={handleRegister} />} />
+        <Route path="/main" element={<MainLayout/>}>
+          <Route path="" element={<Navigate to="/main/erd"/>} />
+          <Route path="erd" element={<ERDDrawer/>} />
+          <Route path="userlist" element={<UserList/>}/>
+        </Route>
+      </Routes>
+    </Router>
   );
 };
 

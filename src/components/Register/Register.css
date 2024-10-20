@@ -1,0 +1,53 @@
+.Register {
+	text-align: center;
+}
+
+.Register h1 {
+	font-size: 3.0rem;
+	color: #333;
+	margin-bottom: 20px;
+}
+
+.Register h2 {
+	font-size: 1.5rem;
+	color: #333;
+	margin-top: 0px;
+	margin-bottom: 5px;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	width: 400px;
+	margin: auto;
+	margin-top: 50px;
+}
+
+label {
+	margin: 10px 20px 5px 0;
+}
+
+input {
+	font-size: 16px;
+	width: 100%;
+	max-width: 374px;
+	height: 25px;
+	padding: 8px;
+	padding-left: 16px;
+	margin-bottom: 10px;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+}
+
+.input.error {
+	border-color: red;
+}
+
+.register-button {
+	width: 100%;
+	max-width: 500px;
+	height: 45px;
+	font-size: 16px;
+	margin-bottom: 10px;
+	padding-left: 16px;
+}
