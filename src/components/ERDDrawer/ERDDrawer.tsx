@@ -5,8 +5,10 @@ import { ViewUpdate } from '@codemirror/view';
 import { Layout } from 'antd';
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
-import SQLEditor from './SQLEditor'
-import ERDResult from './ERDResult'
+import SQLEditor from './SQLEditor';
+import ERDResult from './ERDResult';
+import { Node, Edge } from 'react-flow-renderer';
+
 
 const { Content } = Layout;
 
@@ -14,6 +16,7 @@ const ERDDrawer: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [leftWidth, setLeftWidth] = useState(window.innerWidth / 2);
   const [code, setCode] = useState<string>('');
+  const [diagramData, setDiagramData] = useState<{ nodes: Node[]; edges: Edge[] }>({ nodes: [], edges: [] });
 
   useEffect(() => {
     const handleResizeWindow = () => {
@@ -46,13 +49,13 @@ const ERDDrawer: React.FC = () => {
         style={{ display: 'inline-block' }}
       >
         <Content style={{ backgroundColor: '#f4f4f4', padding: '20px', height: '100%' }}>
-          <SQLEditor/>
+          <SQLEditor setDiagramData={setDiagramData}/>
         </Content>
       </ResizableBox>
 
       {/* ERD Result Area */}
       <Content style={{ flexGrow: 1, backgroundColor: '#fff', padding: '20px' }}>
-        <ERDResult/>
+        <ERDResult diagramData={diagramData}/>
       </Content>
     </Layout>
   );

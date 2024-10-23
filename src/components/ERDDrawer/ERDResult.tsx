@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import CodeMirror from '@uiw/react-codemirror';
-import { sql } from '@codemirror/lang-sql';
-import { ViewUpdate } from '@codemirror/view';
-import { Layout } from 'antd';
-import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
+import ReactFlow, { Node, Edge } from 'react-flow-renderer';
 
-const ERDResult: React.FC = () => {
+interface ERDiagramProps {
+  diagramData: { nodes: Node[]; edges: Edge[] };
+}
+
+const ERDResult: React.FC<ERDiagramProps> = ({ diagramData }) => {
   return (
-    <div></div>
+    <div style={{ height: '90vh', marginTop: '0px', border: '1px solid #ddd' }}>
+      <ReactFlow nodes={diagramData.nodes} edges={diagramData.edges} fitView />
+    </div>
   );
 };
 

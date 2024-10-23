@@ -1,16 +1,16 @@
-create table USER (
+CREATE TABLE USER (
     ID varchar(20) PRIMARY KEY,
     PASSWORD varchar(20),
     ISADMIN boolean
 );
 
-create table LOG (
+CREATE TABLE LOG (
     ID varchar(20),
     ORDER int PRIMARY KEY,
     FOREIGN KEY (ID) REFERENCES USER(ID)
 );
 
-create table LOGINFO (
+CREATE TABLE LOGINFO (
     ID varchar(20) UNIQUE,
     LOG_COUNT int,
     FOREIGN KEY (ID) REFERENCES USER(ID)

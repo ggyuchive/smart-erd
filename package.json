@@ -14,6 +14,7 @@
     "@uiw/react-codemirror": "^4.23.5",
     "antd": "^5.21.4",
     "codemirror": "^6.0.1",
+    "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-flow-renderer": "^10.3.17",
