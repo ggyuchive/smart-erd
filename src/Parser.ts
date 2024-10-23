@@ -1,4 +1,4 @@
-import ReactFlow, { Node, Edge, Position } from 'react-flow-renderer';
+import { Edge } from 'react-flow-renderer';
 
 export const parseSQL = (sql: string) => {
   const tables: any[] = [];
@@ -13,15 +13,59 @@ export const parseSQL = (sql: string) => {
     if (!columnDefinitionsMatch) continue;
     const columnDefinitions = columnDefinitionsMatch[1].trim();
 
-    const columns = columnDefinitions.split(',').map(colDef => {
-      const [name, type] = colDef.trim().split(/\s+/);
-      return { name, type };
+    const columns: any[] = [];
+    let primaryKeyColumns: string[] = [];
+    let foreignKeyColumns: { column: string; references: string }[] = [];
+
+    const columnDefs = columnDefinitions.split(',').map(colDef => colDef.trim());
+
+    columnDefs.forEach(colDef => {
+      const isPrimaryKey = colDef.includes('PRIMARY KEY');
+      if (colDef.startsWith('PRIMARY KEY') || isPrimaryKey) {
+        const pkMatch = colDef.match(/\((.+)\)/);
+        if (pkMatch) {
+          primaryKeyColumns = pkMatch[1].split(',').map(col => col.trim());
+          const [name, type] = colDef.split(/\s+/);
+          primaryKeyColumns.push( name );
+          columns.push({ name, type });
+        }
+        else {
+          const [name, type] = colDef.split(/\s+/);
+          primaryKeyColumns.push( name );
+          columns.push({ name, type });
+        }
+      }
+      else if (colDef.startsWith('FOREIGN KEY')) {
+        const fkMatch = colDef.match(/\((\w+)\)\s+REFERENCES\s+(\w+)/);
+        if (fkMatch) {
+          foreignKeyColumns.push({ column: fkMatch[1], references: fkMatch[2] });
+        }
+      }
+      else {
+        const [name, type] = colDef.split(/\s+/);
+        columns.push({ name, type });
+      }
+    });
+
+    columns.forEach(column => {
+      if (primaryKeyColumns.includes(column.name)) {
+        column.primaryKey = true;
+      }
+    });
+
+    foreignKeyColumns.forEach(fk => {
+      const column = columns.find(col => col.name === fk.column);
+      if (column) {
+        column.foreignKey = fk.references;
+      }
     });
 
     tables.push({ tableName, columns });
   }
+
   return tables;
 };
+
 
 export interface Cardinality {
   entity1: string,
@@ -33,8 +77,8 @@ export interface Cardinality {
 export const generateEdgesFromCardinality = (cardinalityStr: string): Edge[] => {
   const edges: Edge[] = [];
   const cardinalities = parseCard(cardinalityStr);
-  //cardinalities.forEach((cardinality, index) => {
-    const { entity1, entity2, cardinality1, cardinality2 } = cardinalities;
+  cardinalities.forEach((cardinality,) => {
+    const { entity1, entity2, cardinality1, cardinality2 } = cardinality;
 
     edges.push({
       id: `edge-${entity1}-${entity2}-${0}`,
@@ -44,30 +88,34 @@ export const generateEdgesFromCardinality = (cardinalityStr: string): Edge[] => 
       animated: true,
       label: `${cardinality1} <-> ${cardinality2}`,
     });
-  //});
+  });
 
   return edges;
 };
 
-export const parseCard = (cardinalityStr: string): Cardinality => {
+export const parseCard = (cardinalityStr: string): Cardinality[] => {
   const regex = /(\w+)\(([^)]+)\)\s*<->\s*(\w+)\(([^)]+)\)/;
-  const match = cardinalityStr.match(regex);
-  if (match) {
-    const [, entity1, cardinality1, entity2, cardinality2] = match;
-    return {
-      entity1,
-      cardinality1,
-      entity2,
-      cardinality2,
-    };
-  }
-  else {
-    const entity1: string = "";
-    const cardinality1: string = "";
-    const entity2: string = "";
-    const cardinality2: string = "";
-    return {entity1, cardinality1, entity2, cardinality2};
-  }
+  const lines = cardinalityStr
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line && !line.startsWith('--'));
+
+  const cardinalities: Cardinality[] = [];
+
+  lines.forEach(line => {
+    const match = line.match(regex);
+    if (match) {
+      const [, entity1, cardinality1, entity2, cardinality2] = match;
+      cardinalities.push({
+        entity1,
+        cardinality1,
+        entity2,
+        cardinality2,
+      });
+    }
+  });
+
+  return cardinalities;
 };
 
 
